@@ -96,17 +96,6 @@ bool setRunParameters(int argc, char *argv[], int &numArms, int &randomSeed, uns
   return true;
 }
 
-/*int maximum_beta(int A[],int B[],int n)
-{
-  int max=-1,maxi=-1;
-  for(int i=0;i<n;++i)
-  {
-    if(A[0]==0) continue;
-    else if(max<(A[i]/(A[i]+B[i])))
-      maxi = i;
-  }
-  return maxi;
-}*/
 
 int maximum_ucb(float ucb[],int a)
 {
