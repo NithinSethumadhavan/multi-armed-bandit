@@ -1,0 +1,6 @@
+Observations:
+Simple heuristics outperform more advanced algorithms. 
+
+Using git for version control.
+
+Trying to implement Thompson Sampling.
