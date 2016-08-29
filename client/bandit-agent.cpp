@@ -12,7 +12,7 @@
 #include <random>
 
 #include "gsl/gsl_rng.h"
-#include "gsl/gsl_randist.h"
+#include <gsl/gsl_randist.h>
 
 #define MAXHOSTNAME 256
 
@@ -96,7 +96,17 @@ bool setRunParameters(int argc, char *argv[], int &numArms, int &randomSeed, uns
   return true;
 }
 
-
+int maximum_beta(int A[],int B[],int n)
+{
+  int max=-1,maxi=-1;
+  for(int i=0;i<n;++i)
+  {
+    if(A[0]==0) continue;
+    else if(max<(A[i]/(A[i]+B[i])))
+      maxi = i;
+  }
+  return maxi;
+}
 
 int main(int argc, char *argv[]){
   // Run Parameter defaults.
@@ -147,9 +157,13 @@ int main(int argc, char *argv[]){
   char recvBuf[256];
 
   int armToPull = 0;
+  int succCount[50]={0};
+  int failCount[50]={0};
+  unsigned int pullsCount=0;
   sprintf(sendBuf, "%d", armToPull);
 
   cout << "Sending action " << armToPull << ".\n";
+  pullsCount++; 
   while(send(socketHandle, sendBuf, strlen(sendBuf)+1, MSG_NOSIGNAL) >= 0){
 
     float reward = 0;
@@ -160,8 +174,22 @@ int main(int argc, char *argv[]){
     cout << "Received reward " << reward << ".\n";
     cout<<"Num of  pulls "<<pulls<<".\n";
 
-    armToPull = pulls % numArms;
+    if(reward==0)
+       failCount[armToPull]++; 
+    else if(reward==1)
+       succCount[armToPull]++;
+    
 
+
+    if(pullsCount<explorationHorizon)
+      armToPull = pulls % numArms;
+    else
+      armToPull = maximum_beta(succCount,failCount,numArms);
+
+
+    //armToPull = pulls % numArms;
+     
+    pullsCount++;
     sprintf(sendBuf, "%d", armToPull);
     cout << "Sending action " << armToPull << ".\n";
   }
