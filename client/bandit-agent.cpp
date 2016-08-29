@@ -96,7 +96,7 @@ bool setRunParameters(int argc, char *argv[], int &numArms, int &randomSeed, uns
   return true;
 }
 
-int maximum_beta(int A[],int B[],int n)
+/*int maximum_beta(int A[],int B[],int n)
 {
   int max=-1,maxi=-1;
   for(int i=0;i<n;++i)
@@ -106,6 +106,27 @@ int maximum_beta(int A[],int B[],int n)
       maxi = i;
   }
   return maxi;
+}*/
+
+int maximum_ucb(float ucb[],int a)
+{
+  int maxi=-1;
+  float max = -1.0;
+  for(int i=0;i<a;++i)
+  {
+    if(max<ucb[i])
+      { maxi = i; max = ucb[i];}
+  }
+  return maxi;
+}
+
+void ucbUpdate(int S[], int F[], float U[],int a, int p)
+{
+  for(int i=0;i<a;++i)
+  {
+      U[i]= ((float)S[i]/(float)(S[i]+F[i])) + sqrt(2*log2(p)/(float)(S[i]+F[i]));
+      cout<<U[i]<<"\t"<<S[i]<<"\t"<<F[i]<<"\n";
+  }
 }
 
 int main(int argc, char *argv[]){
@@ -159,6 +180,8 @@ int main(int argc, char *argv[]){
   int armToPull = 0;
   int succCount[50]={0};
   int failCount[50]={0};
+  float ucb[50]={0};
+
   unsigned int pullsCount=0;
   sprintf(sendBuf, "%d", armToPull);
 
@@ -184,8 +207,11 @@ int main(int argc, char *argv[]){
     if(pullsCount<explorationHorizon)
       armToPull = pulls % numArms;
     else
-      armToPull = maximum_beta(succCount,failCount,numArms);
+    {
+      ucbUpdate(succCount,failCount,ucb,numArms,pullsCount);
+      armToPull = maximum_ucb(ucb,numArms);
 
+    }
 
     //armToPull = pulls % numArms;
      

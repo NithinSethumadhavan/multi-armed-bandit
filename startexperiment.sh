@@ -15,7 +15,7 @@ SERVERDIR=./server
 CLIENTDIR=./client
 
 OUTPUTFILE=$PWD/serverlog.txt
-
+OUTPUTFILECLIENT=$PWD/clientlog.txt
 randomSeed=0
 
 pushd $SERVERDIR
@@ -27,7 +27,7 @@ popd
 sleep 1
 
 pushd $CLIENTDIR
-cmd="./startclient.sh $numArms $horizon $explorationHorizon $hostname $port $randomSeed &"
+cmd="./startclient.sh $numArms $horizon $explorationHorizon $hostname $port  $randomSeed $OUTPUTFILECLIENT &"
 #echo $cmd
 $cmd > /dev/null 
 popd
