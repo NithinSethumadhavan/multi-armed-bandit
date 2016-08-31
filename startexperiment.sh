@@ -15,7 +15,6 @@ SERVERDIR=./server
 CLIENTDIR=./client
 
 OUTPUTFILE=$PWD/serverlog.txt
-OUTPUTFILECLIENT=$PWD/clientlog.txt
 randomSeed=0
 
 pushd $SERVERDIR

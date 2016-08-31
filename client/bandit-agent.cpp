@@ -113,7 +113,7 @@ void ucbUpdate(int S[], int F[], float U[],int a, int p)
 {
   for(int i=0;i<a;++i)
   {
-      U[i]= ((float)S[i]/(float)(S[i]+F[i])) + sqrt(2*log2(p)/(float)(S[i]+F[i]));
+      U[i]= ((float)S[i]/(float)(S[i]+F[i])) + sqrt(2*log(p)/(float)(S[i]+F[i]));
       cout<<U[i]<<"\t"<<S[i]<<"\t"<<F[i]<<"\n";
   }
 }

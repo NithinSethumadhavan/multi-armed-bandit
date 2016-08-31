@@ -7,9 +7,8 @@ explorationHorizon=$3
 hostname=$4
 port=$5
 randomSeed=$6
-outputfile=$7
 #echo "Inside Client"
 
 cmd="./bandit-agent --numArms $numArms --randomSeed $randomSeed --horizon $horizon --explorationHorizon $explorationHorizon --hostname $hostname --port $port"
 #echo $cmd
-$cmd > $outputfile
+$cmd > ../clientlog.txt
