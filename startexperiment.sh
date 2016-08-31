@@ -26,7 +26,7 @@ popd
 sleep 1
 
 pushd $CLIENTDIR
-cmd="./startclient.sh $numArms $horizon $explorationHorizon $hostname $port  $randomSeed $OUTPUTFILECLIENT &"
+cmd="./startclient.sh $numArms $horizon $explorationHorizon $hostname $port  $randomSeed  &"
 #echo $cmd
 $cmd > /dev/null 
 popd
