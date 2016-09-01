@@ -12,7 +12,7 @@
 #include <random>
 
 #include "gsl/gsl_rng.h"
-#include <gsl/gsl_randist.h>
+#include "gsl/gsl_randist.h"
 
 #define MAXHOSTNAME 256
 
@@ -97,7 +97,7 @@ bool setRunParameters(int argc, char *argv[], int &numArms, int &randomSeed, uns
 }
 
 
-int maximum_ucb(float ucb[],int a)
+int maximum_ucb(float ucb[],int a) //Returns the highest UCB Value from the list of all UCB values.
 {
   int maxi=-1;
   float max = -1.0;
@@ -109,7 +109,7 @@ int maximum_ucb(float ucb[],int a)
   return maxi;
 }
 
-void ucbUpdate(int S[], int F[], float U[],int a, int p)
+void ucbUpdate(int S[], int F[], float U[],int a, int p) //Updates UCB Values for each arm based on latest reward
 {
   for(int i=0;i<a;++i)
   {
@@ -167,9 +167,9 @@ int main(int argc, char *argv[]){
   char recvBuf[256];
 
   int armToPull = 0;
-  int succCount[50]={0};
-  int failCount[50]={0};
-  float ucb[50]={0};
+  int succCount[50]={0}; // Stores Success Count for respective arms
+  int failCount[50]={0}; // Stores Failure Count for respective arms
+  float ucb[50]={0};     // Stores UCB Value for respective arms
 
   unsigned int pullsCount=0;
   sprintf(sendBuf, "%d", armToPull);
@@ -193,16 +193,14 @@ int main(int argc, char *argv[]){
     
 
 
-    if(pullsCount<explorationHorizon)
-      armToPull = pulls % numArms;
+    if(pullsCount < explorationHorizon || pullsCount <= numArms+1) // Condition for Round Robin Algorithm
+      armToPull = pulls % numArms;                                 // Round Robin Algorithm
     else
     {
-      ucbUpdate(succCount,failCount,ucb,numArms,pullsCount);
-      armToPull = maximum_ucb(ucb,numArms);
+      ucbUpdate(succCount,failCount,ucb,numArms,pullsCount);       // Updates UCB[] with new result
+      armToPull = maximum_ucb(ucb,numArms);                        // Finds the next arm to pull
 
     }
-
-    //armToPull = pulls % numArms;
      
     pullsCount++;
     sprintf(sendBuf, "%d", armToPull);
